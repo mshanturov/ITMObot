@@ -4,11 +4,19 @@ FROM python:3.9-slim
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
+# Устанавливаем системные зависимости для PyTorch
+RUN apt-get update && apt-get install -y \
+    libopenblas-dev \
+    gfortran \
+    libopenmpi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Копируем зависимости
 COPY requirements.txt .
 
-# Устанавливаем зависимости
+# Устанавливаем зависимости, включая PyTorch
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install torch
 
 # Копируем исходный код
 COPY . .
